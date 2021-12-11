@@ -1,0 +1,66 @@
+{% extends 'layout.html.twig' %}
+
+{% block title %}Nos produits | {{ parent() }}{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-3">
+            <p class="lead">Nos marques</p>
+            <div class="list-group">
+                <a href="#" class="list-group-item active">Toutes les marques</a>
+                <a href="#" class="list-group-item">Adidas</a>
+                <a href="#" class="list-group-item">Asics</a>
+                <a href="#" class="list-group-item">Nike</a>
+                <a href="#" class="list-group-item">Puma</a>
+            </div>
+        </div>
+
+        <div class="col-md-9">
+            <p class="lead">Nos produits " Toutes les marques "</p>
+            <div class="row text-center">
+                {% for i in 1..9 %}
+                    <div class="col-md-4 col-sm-6 hero-feature">
+                        <div class="thumbnail">
+                            <img src="{{ asset('img/products/shoe-'~ i ~'.jpg') }}" alt="Nom du produit">
+                            <div class="caption">
+                                <h3>Nom du produit</h3>
+                                <p>Une description courte du produit sera affichée à cet endroit.</p>
+                                <p>
+                                    <span class="badge">120,00 €</span>
+                                    <a href="{{ path('store_show_product', {'id': i, 'slug': 'shoe-' ~ i }) }}" class="btn btn-default">Voir la fiche</a>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <div class="row text-center">
+            <nav>
+                <ul class="pagination pagination-lg">
+                    <li>
+                        <a href="#" aria-label="Précédent">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+
+                    {% for i in 1..2 %}
+                        <li class="{{ i is same as 1 ? "active" }}">
+                            <a href="#">{{ i }}</a>
+                        </li>
+                    {% endfor %}
+                    
+                    <li>
+                        <a href="#" aria-label="Suivant">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </div>
+
+    <hr/>
+
+{% endblock %}

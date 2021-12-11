@@ -12,21 +12,15 @@ use Symfony\Component\HttpFoundation\Request;
 final class StoreController extends AbstractController
 {
     /**
-     * @Route("/store/product/{id}/details/{slug}", name="store_show_product", requirements={'id' => '\d+'}, methods={"GET"})
+     * @Route("/store/product/{id}/details/{slug}", name="store_show_product", requirements={"id": "\d+"}, methods={"GET"})
      * @param int $id
      * @param string $slug
      */
     public function showProduct(Request $request, int $id, string $slug): Response
     {
-        return $this->render('store/store_show_product.html.twig', [
+        return $this->render('store/show_product.html.twig', [
             'id' => $id,
             'slug' => $slug,
-            'ip' => $request->getClientIp(),
-            'url' => $request->getUri(),
-            'from_routing' => $this->generateUrl('store_show_product', [
-                'id' => $id,
-                'slug' => $slug,
-            ])
         ]);
     }
 
@@ -36,9 +30,8 @@ final class StoreController extends AbstractController
      */
     public function listProducts(): Response
     {
-        $products = $this->productRepository->findAll();
-        return $this->render('store/store_list_products.html.twig', [
-            "products" => $products,
+        return $this->render('store/list_products.html.twig', [
+            'controller_name' => 'StoreListProducts',
         ]);
     }
 
