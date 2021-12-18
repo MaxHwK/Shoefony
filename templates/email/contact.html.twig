@@ -1,0 +1,11 @@
+{% extends 'email/base.html.twig' %}
+
+{% block content %}
+    <h1>Une demande de contact a eu lieu sur Shoefony !</h1>
+    <ul>
+        <li><b>Nom</b> : {{ contact.lastName }}</li>
+        <li><b>Prenom</b> : {{ contact.firstName }}</li>
+        <li><b>Email</b> : {{ contact.email }}</li>
+        <li><b>Message</b> : {{ contact.message }}</li>
+    </ul>
+{% endblock %}
