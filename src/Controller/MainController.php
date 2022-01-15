@@ -6,6 +6,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
+use App\Manager\ContactManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -13,6 +14,10 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class MainController extends AbstractController 
 {
+    /** @var ContactManager 
+     */
+    private ContactManager $contactManager;
+
     /**
      * @Route("/", name="main_homepage", methods={"GET"})
      */
@@ -46,6 +51,7 @@ final class MainController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->addFlash('success', 'Merci pour votre message, celui-ci a bien été pris en compte !');
+            $this->contactManager->insert($contact);
             return $this->redirectToRoute('main_contact');
         }
 

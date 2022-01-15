@@ -17,22 +17,28 @@
 
         <div class="col-md-9">
             <p class="lead">Nos produits " Toutes les marques "</p>
+    
             <div class="row text-center">
-                {% for i in 1..9 %}
-                    <div class="col-md-4 col-sm-6 hero-feature">
-                        <div class="thumbnail">
-                            <img src="{{ asset('img/products/shoe-'~ i ~'.jpg') }}" alt="Nom du produit">
-                            <div class="caption">
-                                <h3>Nom du produit</h3>
-                                <p>Une description courte du produit sera affichée à cet endroit.</p>
-                                <p>
-                                    <span class="badge">120,00 €</span>
-                                    <a href="{{ path('store_show_product', {'id': i, 'slug': 'shoe-' ~ i }) }}" class="btn btn-default">Voir la fiche</a>
-                                </p>
+                {% if products == null %}
+                    <p>Désolé, il n'y a aucun produit pour le moment !</p>
+                {% else %}
+                    {% for product in products %}
+                        <div class="col-md-4 col-sm-6 hero-feature">
+                            <div class="thumbnail">
+                                <img src="{{ asset('img/products/shoe-'~ product.id ~'.jpg') }}" alt="Nom du produit">
+                                <div class="caption">
+                                    <h3>{{ product.name|capitalize }}</h3>
+                                    <p>{{ product.description }}</p>
+                                    <p>
+                                        <span class="badge">{{ product.price }} €</span>
+                                        <a href="{{ path('store_show_product', {'id': product.id, 'slug': 'shoe-' ~ product.id }) }}" class="btn btn-default">Voir la fiche</a>
+                                        {#<a href="#" class="btn btn-default">Voir la fiche</a>#}
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                {% endfor %}
+                    {% endfor %}
+                {% endif %}
             </div>
         </div>
 
