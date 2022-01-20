@@ -1,12 +1,12 @@
 <?php 
 
-declare(strict_types=1);
-
 namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
-use App\Manager\ContactManager;
+//use App\Mailer\ContactMailer;
+
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,9 +14,14 @@ use Symfony\Component\Routing\Annotation\Route;
 
 final class MainController extends AbstractController 
 {
-    /** @var ContactManager 
-     */
-    private ContactManager $contactManager;
+    private $em;
+    //private ContactMailer $mailer;
+
+    public function __construct(EntityManagerInterface $em /*ContactMailer $mailer*/)
+    {
+        $this->em = $em;
+        //$this->mailer = $mailer;
+    }
 
     /**
      * @Route("/", name="main_homepage", methods={"GET"})
@@ -40,8 +45,6 @@ final class MainController extends AbstractController
 
      /**
      * @Route("/contact", name="main_contact", methods={"GET", "POST"})
-     * @param Request $request
-     * @return Response
      */
     public function contact(Request $request): Response
     {
@@ -50,8 +53,10 @@ final class MainController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($contact);
+            $this->em->flush();
             $this->addFlash('success', 'Merci pour votre message, celui-ci a bien été pris en compte !');
-            $this->contactManager->insert($contact);
+            //$this->mailer->sendMail($contact);
             return $this->redirectToRoute('main_contact');
         }
 
