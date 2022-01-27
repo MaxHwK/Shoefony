@@ -5,6 +5,7 @@ namespace App\Repository\Store;
 use App\Entity\Store\Product;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 /**
  * @method Product|null find($id, $lockMode = null, $lockVersion = null)

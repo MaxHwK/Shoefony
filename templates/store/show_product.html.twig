@@ -1,6 +1,6 @@
 {% extends 'layout.html.twig' %}
 
-{% block title %} Fiche de {{ slug }} | {{ parent() }}{% endblock %}
+{% block title %} Description {{ product.name|capitalize }} | {{ parent() }}{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -16,31 +16,23 @@
         </div>
 
         <div class="col-md-9">
-            <p class="lead"> Fiche descriptive de <b>{{ slug }}</b>
-             <a href="{{ path('store_list_products') }}" class="btn btn-default pull-right">Retour à la liste des produits</a>
+            <p class="lead"> Fiche descriptive du <b>{{ product.name|capitalize }}</b>
+                <a href="{{ path('store_list_products') }}" class="btn btn-default pull-right">Retour à la liste des produits</a>
             </p>
-
             <div class="row">
                 <div class="thumbnail">
-                    <img class="img-responsive" src="{{ asset('img/products/shoe-' ~ id ~'.jpg') }}" alt="">
+                    <img class="img-responsive" src="{{ asset(product.image.url) }}" alt="{{ product.image.alt }}">
                     <div class="caption-full">
-                        <h4 class="pull-right"><span class="badge">120,00 €</span></h4>
-                        <h3>{{ slug }}</h3>
-                        <p>Une description courte du produit sera affichée à cet endroit.</p>
+                        <h4 class="pull-right"><span class="badge">{{ product.price }} €</span></h4>
+                        <h3>{{ product.name|capitalize }}</h3>
+                        <p>{{ product.description }}</p>
                         <p>
-                            Une description longue du produit sera affichée à cet endroit :
-                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore
-                            et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi
-                            ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
-                            cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa
-                            qui officia deserunt mollit anim id est laborum
+                            {{ product.longDescription }}
                         </p>
                     </div>
                 </div>
-
                 <div class="well">
                     <p class="pull-right label label-success">Actuellement 3 avis</p>
-
                     {% for i in 1..3 %}
                         <div class="row">
                             <div class="col-md-12">
@@ -51,7 +43,6 @@
                         </div>
                         <hr/>
                     {% endfor %}
-
                     <div>
                         <form>
                             <div class="form-group">
@@ -66,9 +57,7 @@
                         </form>
                     </div>
                 </div>
-
             </div>
-
         </div>
 
     </div>
