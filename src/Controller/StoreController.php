@@ -51,6 +51,7 @@ final class StoreController extends AbstractController
 
         return $this->render('store/show_product.html.twig', [
             'product' => $product,
+            'brands' => $this->brandRepository->findAll()
         ]);
     }
 
