@@ -20,6 +20,27 @@ class ProductRepository extends ServiceEntityRepository
         parent::__construct($registry, Product::class);
     }
 
+    public function findLastCreated(): array
+    {
+        return $this->findBy(
+            [],
+            ['createdAt' => 'DESC'],
+            4,
+        );
+    }
+
+    public function findMostCommProducts()
+    {
+        return $this
+            ->createQueryBuilder('p')
+            ->leftJoin('p.comments', 'c')
+            ->orderBy('count(c)', 'DESC')
+            ->groupBy('p')
+            ->setMaxResults(4)
+            ->getQuery()
+            ->getResult();
+    }
+
     // /**
     //  * @return Product[] Returns an array of Product objects
     //  */

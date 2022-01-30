@@ -1,0 +1,15 @@
+{% for product in products %}
+    <div class="col-md-3 col-sm-6 hero-feature">
+        <div class="thumbnail">
+            <img src="{{ asset('img/products/shoe-' ~ product.id ~ '.jpg') }}" alt="{{ product.name }}">
+            <div class="caption">
+                <h3>{{ product.name|capitalize }}</h3>
+                <p>{{ product.description }}</p>
+                <p>
+                    <span class="badge">{{ product.price }} €</span>
+                    <a href="{{ path('store_show_product', {'id': product.id, 'slug': product.slug}) }}" class="btn btn-default">Voir la fiche</a>
+                </p>
+            </div>
+        </div>
+    </div>
+{% endfor %}

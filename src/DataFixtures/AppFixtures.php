@@ -9,6 +9,7 @@ use App\Entity\Store\Product;
 use App\Entity\Store\Image;
 use App\Entity\Store\Brand;
 use App\Entity\Store\Color;
+use App\Entity\Store\Comment;
 
 class AppFixtures extends Fixture
 {
@@ -40,6 +41,7 @@ class AppFixtures extends Fixture
         $this->loadBrands();
         $this->loadColors();
         $this->loadProducts();
+        $this->loadComments();
         
         $this->manager->flush();
     }
@@ -66,6 +68,45 @@ class AppFixtures extends Fixture
         }
     }
 
+    private function loadComments() 
+    {
+        $DATA_PSEUDOS = [
+            'Max',
+            'Flavien',
+            'Logan',
+            'Adel',
+            'M.Hermann',
+        ];
+    
+        $DATA_MESSAGES = [
+            'Meilleures chaussures !',
+            'Meilleur investissement !',
+            'Très confortables !',
+            'Nuuuuuuul !',
+            'Non confortables !',
+            'Pire investissement !',
+            'Pires chaussures !',
+        ];
+
+        for ($i = 1; $i < 21; $i++) {
+            /** @var Product $product */
+            $product = $this->getReference(Product::class . $i);
+
+            $commentsCount = random_int(0, 3);
+
+            for ($j = 0; $j < $commentsCount; $j++) {  
+                sleep(1);
+                
+                $comment = (new Comment() )
+                    ->setPseudo($DATA_PSEUDOS[array_rand($DATA_PSEUDOS)])
+                    ->setMessage($DATA_MESSAGES[array_rand($DATA_MESSAGES)])
+                    ->setProduct($product);
+
+                $this->manager->persist($comment);
+            }
+        }
+    }
+
     private function loadProducts(): void
     {
         for ($i = 1; $i < 21; $i++) {
@@ -79,7 +120,7 @@ class AppFixtures extends Fixture
                 ->setCreatedAt(new \Datetime())
                 ->setLongDescription('Description longue du produit n°' . $i . ' : Lorem ipsum dolor sit amet consectetur, 
                 adipisicing elit. Saepe laboriosam laudantium voluptatum dicta fugit laborum ut soluta at, sapiente nisi 
-                deserunt officia obcaecati quo eius. Tenetur fuga provident inventore nesciunt.')
+                deserunt officia obcaecati quo eius.')
                 ->setSlug('produit-'. $i)
                 ->setBrand($brand);
 

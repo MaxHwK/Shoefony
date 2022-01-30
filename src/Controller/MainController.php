@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Contact;
 use App\Form\ContactType;
+use App\Repository\Store\ProductRepository;
 //use App\Mailer\ContactMailer;
 
 use Doctrine\ORM\EntityManagerInterface;
@@ -15,11 +16,13 @@ use Symfony\Component\Routing\Annotation\Route;
 final class MainController extends AbstractController 
 {
     private $em;
+    private ProductRepository $productRepository;
     //private ContactMailer $mailer;
-
-    public function __construct(EntityManagerInterface $em /*ContactMailer $mailer*/)
+    
+    public function __construct(EntityManagerInterface $em, ProductRepository $productRepository /*ContactMailer $mailer*/)
     {
         $this->em = $em;
+        $this->productRepository = $productRepository;
         //$this->mailer = $mailer;
     }
 
@@ -28,8 +31,12 @@ final class MainController extends AbstractController
      */
     public function homepage(): Response
     {
+        $newProducts = $this->productRepository->findLastCreated();
+        $popProducts = $this->productRepository->findMostCommProducts();
+
         return $this->render('main/homepage.html.twig', [
-            'controller_name' => 'MainController',
+            'newProducts' => $newProducts,
+            'popProducts' => $popProducts
         ]);
     }
 

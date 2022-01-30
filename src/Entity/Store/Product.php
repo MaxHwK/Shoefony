@@ -71,6 +71,11 @@ class Product
      */
     private $colors;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Comment::class, mappedBy="product", orphanRemoval=true)
+     */
+    private $comments;
+
     public function __construct()
     {
         $this->createdAt = new \DateTime();
@@ -198,6 +203,35 @@ class Product
     public function removeColor(Color $color): self
     {
         $this->colors->removeElement($color);
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Comment[]
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): self
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments[] = $comment;
+            $comment->setProduct($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): self
+    {
+        if ($this->comments->removeElement($comment)) {
+            if ($comment->getProduct() === $this) {
+                $comment->setProduct(null);
+            }
+        }
 
         return $this;
     }

@@ -51,7 +51,6 @@ final class StoreController extends AbstractController
 
         return $this->render('store/show_product.html.twig', [
             'product' => $product,
-            'brands' => $this->brandRepository->findAll()
         ]);
     }
 
@@ -76,14 +75,13 @@ final class StoreController extends AbstractController
         ]);
     }
 
-    public function brandsMenu(int $currentBrandId = null): Response
+    public function menuBrands(int $currentBrandId = null): Response
     {
         $brands = $this->brandRepository->findAll();
 
-        return $this->render('store/list_products.html.twig',[
+        return $this->render('store/_menu_brands.html.twig', [
            'brands' => $brands,
            'current_brand_id' => $currentBrandId
         ]);
     }
-
 }
