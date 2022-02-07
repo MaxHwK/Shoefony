@@ -8,17 +8,22 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\Store\ProductRepository;
 use App\Repository\Store\BrandRepository;
+use App\Entity\Store\Comment;
+use App\Form\CommentType;
 
 final class StoreController extends AbstractController
 {
+    private $em;
     private ProductRepository $productRepository;
     private BrandRepository $brandRepository;
 
-    public function __construct(ProductRepository $productRepository, BrandRepository $brandRepository)
+    public function __construct(EntityManagerInterface $em, ProductRepository $productRepository, BrandRepository $brandRepository)
     {
+        $this->em = $em;
         $this->productRepository = $productRepository;
         $this->brandRepository = $brandRepository;
     }
@@ -36,12 +41,12 @@ final class StoreController extends AbstractController
     }
 
     /**
-     * @Route("/product/{id}/details/{slug}", name="store_show_product", requirements={"id" = "\d+"}, methods={"GET"})
+     * @Route("/product/{id}/details/{slug}", name="store_show_product", requirements={"id" = "\d+"}, methods={"GET", "POST"})
      * @param int $id
      * @param string $slug
      * @return Response
      */
-    public function showProduct(int $id, string $slug): Response
+    public function showProduct(int $id, string $slug, Request $request): Response
     {
         $product= $this->productRepository->find($id);
 
@@ -49,8 +54,20 @@ final class StoreController extends AbstractController
             throw new NotFoundHttpException();
         }
 
+        $comment = new Comment();
+        $form = $this->createForm(CommentType::class, $comment);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $this->em->persist($comment);
+            $this->em->flush();
+            $this->addFlash('success', 'Merci pour votre avis !');
+            return $this->redirectToRoute('store_show_product');
+        }
+
         return $this->render('store/show_product.html.twig', [
             'product' => $product,
+            'form' => $form->createView()
         ]);
     }
 

@@ -50,7 +50,7 @@ final class MainController extends AbstractController
         ]);
     }
 
-     /**
+    /**
      * @Route("/contact", name="main_contact", methods={"GET", "POST"})
      */
     public function contact(Request $request): Response
