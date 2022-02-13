@@ -12,20 +12,24 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Repository\Store\ProductRepository;
 use App\Repository\Store\BrandRepository;
+use App\Repository\Store\CommentRepository;
 use App\Entity\Store\Comment;
 use App\Form\CommentType;
 
 final class StoreController extends AbstractController
 {
-    private $em;
+    private EntityManagerInterface $em;
     private ProductRepository $productRepository;
     private BrandRepository $brandRepository;
+    private CommentRepository $commentRepository;
 
-    public function __construct(EntityManagerInterface $em, ProductRepository $productRepository, BrandRepository $brandRepository)
+    public function __construct(EntityManagerInterface $em, ProductRepository $productRepository, 
+    BrandRepository $brandRepository, CommentRepository $commentRepository)
     {
         $this->em = $em;
         $this->productRepository = $productRepository;
         $this->brandRepository = $brandRepository;
+        $this->commentRepository = $commentRepository;
     }
 
     /**
@@ -49,24 +53,32 @@ final class StoreController extends AbstractController
     public function showProduct(int $id, string $slug, Request $request): Response
     {
         $product= $this->productRepository->find($id);
+        $comments = $this->commentRepository->findBy(['product' => $product]);
 
         if($product === null){
             throw new NotFoundHttpException();
         }
 
         $comment = new Comment();
+        $comment->setProduct($product);
         $form = $this->createForm(CommentType::class, $comment);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $this->addFlash('success', 'Merci pour votre avis !');
             $this->em->persist($comment);
             $this->em->flush();
-            $this->addFlash('success', 'Merci pour votre avis !');
-            return $this->redirectToRoute('store_show_product');
+
+            return $this->redirectToRoute('store_show_product', [
+                'id' => $product->getId(),
+                'slug' => $product->getSlug(),
+            ]);
         }
 
         return $this->render('store/show_product.html.twig', [
             'product' => $product,
+            'slug' => $slug,
+            'comments' => $comments,
             'form' => $form->createView()
         ]);
     }
